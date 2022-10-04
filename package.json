@@ -1,0 +1,26 @@
+{
+  "name": "superproyecto",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/g3vi/superProyecto.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/g3vi/superProyecto/issues"
+  },
+  "homepage": "https://github.com/g3vi/superProyecto#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.1",
+    "firebase": "^9.10.0",
+    "stripe": "^10.12.0"
+  }
+}
