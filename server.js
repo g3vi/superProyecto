@@ -2,7 +2,7 @@ import express from "express"
 import bcrypt from "bcrypt"
 import stripe from "stripe"
 import {initializeApp} from 'firebase/app'
-import {getDoc, getFirestore, setDoc} from 'firebase/firestore'
+import {getDoc, getFirestore, setDoc, collection, doc} from 'firebase/firestore'
 // configuracion de firebase
 const firebaseConfig={
     apiKey: "AIzaSyADdBoSuadnTcuqIbUajrU24Mgh_EqlQ5I",

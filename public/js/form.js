@@ -16,8 +16,29 @@ formBtn.addEventListener('click', () => {
     let tac =  document.querySelector('#tac') || null
     if (fullname !== null) {
         // Pagina de Registro
+        if (fullname.length < 3) {
+            showFormError('name must be 3 letters long')
+        } else if (!email.value.length) {
+            showFormError('must enter an email')
+        } else if (password.length < 8) {
+            showFormError('password must be 8 letters long')
+        } else if ((number) || number.value.leng < 10) {
+            showFormError('invalid number')
+        } else if (!tac.checked) {
+            showFormError('you must agree with my terms')
+        } else {
+            // Enviamos los datos al back
+            loader.style.display = 'block'
+            sendData('/signup', {
+                name: fullname.value,
+                email: email.value,
+                password: password.value,
+                number: number.value,
+                tac: tac.checked
+            })
+        }
     } else {
-        if ( !email.ariaValueMax.length || !password.ariaValueMax.length) {
+        if ( !email.value.length || !password.value.length) {
             showFormError('fill all inputs')
         } else {
             loader.style.display = 'block'

@@ -1,4 +1,5 @@
 const sendData = (path, data) => {
+    console.log(path,data)
     fetch(path, {
         method: 'post',
         headers: new Headers({
@@ -14,8 +15,10 @@ const processData = (data) => {
     loader.style.display = null
     if(data.alert){
         showFormError(data.alert)
-    }else {
+    }else if (data.email) {
         // Codigo cuando si se pudo
+        sessionStorage.user = JSON.stringify(data)
+        location.replace('/')
     }
 }
 

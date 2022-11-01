@@ -100,3 +100,19 @@ input:focus, textarea:focus {
     color: darkgreen;
     font-size: .8rem;
 }
+.tc-text {
+    margin-left: 5px;
+    font-size: .8rem;
+    font-family: 'lato', sans-serif;
+}
+#tc {
+    /*-webkit-appearance: none;*/
+    width: 15px;
+    height: 15px;
+    padding: 0;
+    border: 1px solid #b9b9b9;
+    cursor: pointer;
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
