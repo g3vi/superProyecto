@@ -38,7 +38,7 @@ const createNavbar=()=>{
             <img src="./img/user.png" class="user-icon">
         <div class="user-icon-popup">
             <p>Login to your acount</p>
-            <a>Login</a>
+            <a href="/login">Login</a>
         </div>
         </div>
     </div>
@@ -56,7 +56,7 @@ let actionBtn=userPopupIcon.querySelector('a')
 let user=JSON.parse(sessionStorage.user || null)
 if(user!=null){
     text.innerHTML=`log in as, ${user.name}`
-    actionBtn.innerHTML='log out'
+    actionBtn.innerHTML='logout'
     actionBtn.addEventListener('click',()=>{
         logout()
     })

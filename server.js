@@ -29,7 +29,8 @@ app.get('/signup',(req,res) => {
     res.sendFile('signup.html',{root: 'public'})
 })
 app.post('/signup',(req,res) => {
-    const { name, email, password, number, tac} = req.body
+    const { name, email, password, number, tac } = req.body
+    console.log(req.body)
     // Validaciones
     if(name.length <3){
         res.json({ 'alert': 'name must be 3 letters long'})
@@ -49,14 +50,16 @@ app.post('/signup',(req,res) => {
             res.json({'alert': 'email already exists'})
             }else {
                 //encriptar password
-                bcrypt.genSalt(256,(err,hash)=> {
-                    req.body.password = hash
-                    req.body.seller = false
-                    setDoc(doc(users, email), req.body).then(data =>{
-                        res.json({
-                            name: req.body.name,
-                            email: req.body.email,
-                            seller: req.body.seller
+                bcrypt.genSalt(10,(err,salt)=> {
+                    bcrypt.hash(password, salt, (err, hash) => {
+                        req.body.password = hash
+                        req.body.seller = false
+                        setDoc(doc(users, email), req.body).then(data =>{
+                            res.json({
+                                name: req.body.name,
+                                email: req.body.email,
+                                seller: req.body.seller
+                            })
                         })
                     })
                 })
@@ -70,6 +73,7 @@ app.get('/login',(req,res) => {
 })
 app.post('/login',(req,res) => {
     let { email, password } = req.body
+    console.log('login', email,password)
     if ( !email.length || !password.length){
         return res.json({
             'alert': 'fill all the inputs'

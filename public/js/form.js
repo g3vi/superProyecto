@@ -13,7 +13,7 @@ formBtn.addEventListener('click', () => {
     let email =  document.querySelector('#email') || null
     let password =  document.querySelector('#password') || null
     let number =  document.querySelector('#number') || null
-    let tac =  document.querySelector('#tac') || null
+    let tac =  document.querySelector('#tc') || null
     if (fullname !== null) {
         // Pagina de Registro
         if (fullname.length < 3) {
@@ -22,7 +22,7 @@ formBtn.addEventListener('click', () => {
             showFormError('must enter an email')
         } else if (password.length < 8) {
             showFormError('password must be 8 letters long')
-        } else if ((number) || number.value.leng < 10) {
+        } else if (Number(number) || number.value.length < 10) {
             showFormError('invalid number')
         } else if (!tac.checked) {
             showFormError('you must agree with my terms')
