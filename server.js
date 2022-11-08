@@ -2,7 +2,7 @@ import express from "express"
 import bcrypt from "bcrypt"
 import stripe from "stripe"
 import {initializeApp} from 'firebase/app'
-import {getDoc, getFirestore, setDoc, collection, doc} from 'firebase/firestore'
+import {getDoc, getFirestore, setDoc, collection, doc, updateDoc} from 'firebase/firestore'
 // configuracion de firebase
 const firebaseConfig={
     apiKey: "AIzaSyADdBoSuadnTcuqIbUajrU24Mgh_EqlQ5I",
@@ -89,6 +89,7 @@ app.post('/login',(req,res) => {
             }else {
                 bcrypt.compare(password,user.data().password,(err,result) => {
                     if (result) {
+                        let data = user.data()
                         return res.json({
                             name: data.name,
                             email: data.email,
@@ -100,6 +101,34 @@ app.post('/login',(req,res) => {
             })
         }
     })
+})
+
+// Ruta Seller
+app.get('/seller', (req,res) => {
+    res.sendFile('seller.html',{ root: 'public'})
+})
+app.post('/seller', (req,res) => {
+    let { name, address, about, number, email } = req.body
+    if (!name.length || !address.length || !about.length || number.length < 10 || !Number(number)) {
+        return res.json({
+            'alert': 'somethitng was wrong'
+        })
+    } else {
+        // update seller
+        const sellers = collection(db, "sellers")
+        setDoc(doc(sellers, email), req.body)
+        .then(data => {
+            const users = collection(db, "users")
+            updateDoc(doc(users, email), {
+                seller: true
+            })
+            .then(data => {
+                res.json( {
+                    'seller': true
+                })
+            })
+        })
+    }
 })
 app.listen(3000,()=>{
     console.log('Servidor ejecutandose')

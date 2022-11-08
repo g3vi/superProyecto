@@ -6,8 +6,8 @@ window.addEventListener('scroll', () => {
         navbar.classList.remove('bg')
     }
 })
-const createNavbar=()=>{
-    navbar.innerHTML+=
+const createNavbar = () => {
+    navbar.innerHTML +=
     `
     <ul class="links-container">
         <li class="link-item">
@@ -49,7 +49,7 @@ createNavbar()
 let userIccon=document.querySelector('.user-icon')
 let userPopupIcon=document.querySelector('.user-icon-popup')
 userIccon.addEventListener('click',()=>{
-    useUserIcon.classList.toggle('active')
+    userPopupIcon.classList.toggle('active')
 })
 let text=userPopupIcon.querySelector('p')
 let actionBtn=userPopupIcon.querySelector('a')
@@ -57,13 +57,13 @@ let user=JSON.parse(sessionStorage.user || null)
 if(user!=null){
     text.innerHTML=`log in as, ${user.name}`
     actionBtn.innerHTML='logout'
-    actionBtn.addEventListener('click',()=>{
+    actionBtn.addEventListener('click', () => {
         logout()
     })
 }else{
     text.innerHTML='log in to your account'
     actionBtn.innerHTML='login'
-    actionBtn.addEventListener('click',()=>{
+    actionBtn.addEventListener('click', () => {
         location.href('/login')
     })
 }
