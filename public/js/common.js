@@ -1,9 +1,9 @@
 const sendData = (path, data) => {
     console.log(path,data)
     fetch(path, {
-        method: 'post',
+        method: 'POST',
         headers: new Headers({
-            'Content-Type': 'aplication/json'
+            'Content-Type': 'application/json'
         }),
         body: JSON.stringify(data)
     })

@@ -2,10 +2,10 @@ import express from "express"
 import bcrypt from "bcrypt"
 import stripe from "stripe"
 import {initializeApp} from 'firebase/app'
-import {getDoc, getFirestore, setDoc, collection, doc} from 'firebase/firestore'
+import {getDoc, getFirestore, setDoc, collection, doc, updateDoc, getDocs, query, where } from 'firebase/firestore'
 // configuracion de firebase
 const firebaseConfig={
-    apiKey: "AIzaSyADdBoSuadnTcuqIbUajrU24Mgh_EqlQ5I",
+  apiKey: "AIzaSyADdBoSuadnTcuqIbUajrU24Mgh_EqlQ5I",
   authDomain: "demoecommerce-8876f.firebaseapp.com",
   projectId: "demoecommerce-8876f",
   storageBucket: "demoecommerce-8876f.appspot.com",
@@ -29,7 +29,8 @@ app.get('/signup',(req,res) => {
     res.sendFile('signup.html',{root: 'public'})
 })
 app.post('/signup',(req,res) => {
-    const { name, email, password, number, tac} = req.body
+    const { name, email, password, number, tac } = req.body
+    console.log(req.body)
     // Validaciones
     if(name.length <3){
         res.json({ 'alert': 'name must be 3 letters long'})
@@ -49,14 +50,16 @@ app.post('/signup',(req,res) => {
             res.json({'alert': 'email already exists'})
             }else {
                 //encriptar password
-                bcrypt.genSalt(256,(err,hash)=> {
-                    req.body.password = hash
-                    req.body.seller = false
-                    setDoc(doc(users, email), req.body).then(data =>{
-                        res.json({
-                            name: req.body.name,
-                            email: req.body.email,
-                            seller: req.body.seller
+                bcrypt.genSalt(10,(err,salt)=> {
+                    bcrypt.hash(password, salt, (err, hash) => {
+                        req.body.password = hash
+                        req.body.seller = false
+                        setDoc(doc(users, email), req.body).then(data =>{
+                            res.json({
+                                name: req.body.name,
+                                email: req.body.email,
+                                seller: req.body.seller
+                            })
                         })
                     })
                 })
@@ -70,6 +73,7 @@ app.get('/login',(req,res) => {
 })
 app.post('/login',(req,res) => {
     let { email, password } = req.body
+    console.log('login', email,password)
     if ( !email.length || !password.length){
         return res.json({
             'alert': 'fill all the inputs'
@@ -85,6 +89,7 @@ app.post('/login',(req,res) => {
             }else {
                 bcrypt.compare(password,user.data().password,(err,result) => {
                     if (result) {
+                        let data = user.data()
                         return res.json({
                             name: data.name,
                             email: data.email,
@@ -95,6 +100,65 @@ app.post('/login',(req,res) => {
                 }
             })
         }
+    })
+})
+
+// Ruta Seller
+app.get('/seller', (req,res) => {
+    res.sendFile('seller.html',{ root: 'public'})
+})
+app.post('/seller', (req,res) => {
+    let { name, address, about, number, email } = req.body
+    if (!name.length || !address.length || !about.length || number.length < 10 || !Number(number)) {
+        return res.json({
+            'alert': 'somethitng was wrong'
+        })
+    } else {
+        // update seller
+        const sellers = collection(db, "sellers")
+        setDoc(doc(sellers, email), req.body)
+        .then(data => {
+            const users = collection(db, "users")
+            updateDoc(doc(users, email), {
+                seller: true
+            })
+            .then(data => {
+                res.json( {
+                    'seller': true
+                })
+            })
+        })
+    }
+})
+app.get('/dashboard', (req,res) => {
+    res.sendFile('dashboard.html', { root: 'public'})
+})
+app.post('/get-products', (req,res) => {
+    let { email, id, tag} = req.body
+    let products = collection(db, 'products')
+    let docRef
+    if(id) {
+        docRef = getDoc(doc(products, id))
+    } else if (tag) {
+        docRef = getDocs(query(products, where("tags", "array-contains"), tag))
+    } else {
+        docRef = getDocs(query(products, where("email", "==", email)))
+    }
+    docRef.then(products => {
+        if(products.empty) {
+            return res.json('no products')
+        }
+        let arr = []
+        if(id) {
+            return res.json(products.data())
+        } else {
+            products.forEach(item => {
+                let data = item.data()
+                data.id = item.id
+                arr.push(data)
+            })
+        }
+        res.json(arr)
     })
 })
 app.listen(3000,()=>{

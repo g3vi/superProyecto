@@ -1,3 +1,5 @@
+let user = JSON.parse(sessionStorage.user || null)
+
 const navbar=document.querySelector('.navbar')
 window.addEventListener('scroll', () => {
     if(scrollY >= 180){
@@ -6,64 +8,149 @@ window.addEventListener('scroll', () => {
         navbar.classList.remove('bg')
     }
 })
-const createNavbar=()=>{
-    navbar.innerHTML+=
-    `
-    <ul class="links-container">
-        <li class="link-item">
-             <a href="#" class="link active">Home</a>
-        </li>
-        <li class="link-item">
-            <a href="#" class="link">Product</a>
-        </li>
-        <li class="link-item">
-            <a href="#" class="link">About</a>
-        </li>
-        <li class="link-item">
+const createNavbar = () => {
+    if (user && user.seller)
+    {
+        navbar.innerHTML +=
+        `
+        <ul class="links-container">
+            <li class="link-item">
+                 <a href="#" class="link active">Home</a>
+            </li>
+            <li class="link-item">
+                <a href="#" class="link">Product</a>
+            </li>
+            <li class="link-item">
+                <a href="#" class="link">About</a>
+            </li>
+            <li class="link-item">
             <a href="#" class="link">Contact</a>
-        </li>
-    </ul>
-    <div class="user-interactions">
-        <div class="search-box">
-        <input type="text" class="search" placeholder="search item">
-        <button class="search-btn">
-            <img src="./img/search.png" alt="" class="cart-icon">
-        </button>
-    </div>
-        <div class="cart" onclick="location.href = '/cart'">
-            <img src="./img/cart.png" class="cart-icon">
-            <span class="cart-item-count">00</span>
+            </li>
+            <li class="link-item">
+            <a href="/dasboard" class="link">Dashboard</a>
+            </li>
+        </ul>
+        <div class="user-interactions">
+            <div class="search-box">
+            <input type="text" class="search" placeholder="search item">
+            <button class="search-btn">
+                <img src="./img/search.png" alt="" class="cart-icon">
+            </button>
         </div>
-        <div class="user">
-            <img src="./img/user.png" class="user-icon">
-        <div class="user-icon-popup">
-            <p>Login to your acount</p>
-            <a>Login</a>
+            <div class="cart" onclick="location.href = '/cart'">
+                <img src="./img/cart.png" class="cart-icon">
+                <span class="cart-item-count">00</span>
+            </div>
+            <div class="user">
+                <img src="./img/user.png" class="user-icon">
+            <div class="user-icon-popup">
+                <p>Login to your acount</p>
+                <a href="/login">Login</a>
+            </div>
+            </div>
         </div>
+        `
+    } else if(user)
+    {
+        navbar.innerHTML +=
+        `
+        <ul class="links-container">
+            <li class="link-item">
+                 <a href="#" class="link active">Home</a>
+            </li>
+            <li class="link-item">
+                <a href="#" class="link">Product</a>
+            </li>
+            <li class="link-item">
+                <a href="#" class="link">About</a>
+            </li>
+            <li class="link-item">
+            <a href="#" class="link">Contact</a>
+            </li>
+            <li class="link-item">
+            <a href="/seller" class="link">Seller</a>
+            </li>
+        </ul>
+        <div class="user-interactions">
+            <div class="search-box">
+            <input type="text" class="search" placeholder="search item">
+            <button class="search-btn">
+                <img src="./img/search.png" alt="" class="cart-icon">
+            </button>
         </div>
-    </div>
-    `
+            <div class="cart" onclick="location.href = '/cart'">
+                <img src="./img/cart.png" class="cart-icon">
+                <span class="cart-item-count">00</span>
+            </div>
+            <div class="user">
+                <img src="./img/user.png" class="user-icon">
+            <div class="user-icon-popup">
+                <p>Login to your acount</p>
+                <a href="/login">Login</a>
+            </div>
+            </div>
+        </div>
+        `
+    } else 
+    {
+        navbar.innerHTML +=
+        `
+        <ul class="links-container">
+            <li class="link-item">
+                 <a href="#" class="link active">Home</a>
+            </li>
+            <li class="link-item">
+                <a href="#" class="link">Product</a>
+            </li>
+            <li class="link-item">
+                <a href="#" class="link">About</a>
+            </li>
+            <li class="link-item">
+            <a href="#" class="link">Contact</a>
+            </li>
+        </ul>
+        <div class="user-interactions">
+            <div class="search-box">
+            <input type="text" class="search" placeholder="search item">
+            <button class="search-btn">
+                <img src="./img/search.png" alt="" class="cart-icon">
+            </button>
+        </div>
+            <div class="cart" onclick="location.href = '/cart'">
+                <img src="./img/cart.png" class="cart-icon">
+                <span class="cart-item-count">00</span>
+            </div>
+            <div class="user">
+                <img src="./img/user.png" class="user-icon">
+            <div class="user-icon-popup">
+                <p>Login to your acount</p>
+                <a href="/login">Login</a>
+            </div>
+            </div>
+        </div>
+        `
+    }
 }
 createNavbar()
 //user icon popup
 let userIccon=document.querySelector('.user-icon')
 let userPopupIcon=document.querySelector('.user-icon-popup')
 userIccon.addEventListener('click',()=>{
-    useUserIcon.classList.toggle('active')
+    userPopupIcon.classList.toggle('active')
 })
 let text=userPopupIcon.querySelector('p')
 let actionBtn=userPopupIcon.querySelector('a')
-let user=JSON.parse(sessionStorage.user || null)
+
 if(user!=null){
     text.innerHTML=`log in as, ${user.name}`
-    actionBtn.innerHTML='log out'
-    actionBtn.addEventListener('click',()=>{
+    actionBtn.innerHTML='logout'
+    actionBtn.addEventListener('click', () => {
         logout()
     })
 }else{
     text.innerHTML='log in to your account'
     actionBtn.innerHTML='login'
-    actionBtn.addEventListener('click',()=>{
+    actionBtn.addEventListener('click', () => {
         location.href('/login')
     })
 }
